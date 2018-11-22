@@ -1,4 +1,5 @@
-# AdamProj
+
+![](https://github.com/guybi/Items-list/blob/master/Capture1.JPG)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.5.
 
