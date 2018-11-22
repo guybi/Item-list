@@ -13,7 +13,7 @@ export class MainBoardComponent implements OnInit {
   @ViewChild('nameInput') nameInput: ElementRef;
   @ViewChild('disInput') disInput: ElementRef;
 
-  selectedItem: Item;
+  selectedItem: Item = new Item('', '');
 
   constructor(private elementBoxService: ElementBoxService) { }
 
@@ -25,30 +25,29 @@ export class MainBoardComponent implements OnInit {
   }
 
   onSaveItem() {
+
     const name = this.nameInput.nativeElement.value;
     const dec = this.disInput.nativeElement.value;
+
     if (name === '' || dec === '') {
       return;
     }
-    console.log(this.selectedItem);
-    if (this.selectedItem === undefined) {
-      const item = new Item(name, dec);
-      this.elementBoxService.addNewItem(item);
-    } else {
-      this.selectedItem.name = name;
-      this.selectedItem.desription = dec;
-      this.elementBoxService.saveItem(this.selectedItem);
-    }
 
+    this.selectedItem.name = name;
+    this.selectedItem.desription = dec;
+    this.elementBoxService.saveItem(this.selectedItem);
+
+    this.cleanInputs();
+  }
+
+  cleanInputs() {
     this.nameInput.nativeElement.value = '';
     this.disInput.nativeElement.value = '';
-    this.selectedItem = undefined;
+    this.selectedItem = new Item('', '');
   }
 
   onClickNewItem() {
-    this.selectedItem = undefined;
-    this.nameInput.nativeElement.value = '';
-    this.disInput.nativeElement.value = '';
+    this.cleanInputs();
   }
 
   onSelectedItem(element: Item) {
@@ -58,12 +57,8 @@ export class MainBoardComponent implements OnInit {
   }
 
   onDeleteItem() {
-    console.log(this.selectedItem);
-    if (this.selectedItem === undefined) {
-      return;
-    }
     this.elementBoxService.removeItem(this.selectedItem);
     this.selectedItem = undefined;
-    this.onClickNewItem();
+    this.cleanInputs();
   }
 }

@@ -29,7 +29,10 @@ export class ElementBoxService {
   }
 
   saveItem(item: Item) {
-    console.log(this.elements.indexOf(item));
+    if (this.elements.indexOf(item) === -1) {
+      this.addNewItem(item);
+    }
+    this.elementsChanged.emit(this.elements.slice());
   }
 
   removeItem(item: Item) {
