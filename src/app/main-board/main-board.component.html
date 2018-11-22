@@ -1,0 +1,32 @@
+<div class="container">
+      <div class="row">
+          <div class="col-sm-8 form-group">
+            <label for="name">Name</label>
+            <input class="form-control" id="name" type="text" #nameInput (keyup)='nameInput.value'/>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-8 form-group">
+            <label for="description">Description</label>
+            <input class="form-control" id="description" type="text" #disInput (keyup)='disInput.value'/>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-8 form-group">
+              <button class="btn btn-success" (click)="onClickNewItem()">New Item</button>
+              <button class="btn btn-primary" (click)="onSaveItem()" [disabled]="nameInput.value.trim() === '' || disInput.value.trim() === ''">Save</button>
+              <button class="btn btn-danger" (click)="onDeleteItem()">Delete</button>
+          </div>
+      </div>
+      <hr>
+        <div class="container col-xs-12">
+          <app-element-box *ngFor="let element of getElements(); let i = index"
+            style="cursor: pointer"
+            [element]="element"
+            [index]="i"
+            (selectedItem)="onSelectedItem($event)"
+            >
+          </app-element-box>
+        </div>
+ 
+</div>
