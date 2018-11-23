@@ -10,16 +10,10 @@ import { Item } from 'src/app/shared/item';
 export class ElementBoxComponent implements OnInit {
 
   @Input() element: Item;
-  @Input() index: number;
-
-  @Output() selectedItem = new EventEmitter<Item>();
-
+  
   constructor() { }
 
   ngOnInit() {
   }
 
-  onSelectElement() {
-    this.selectedItem.emit(this.element);
-  }
 }

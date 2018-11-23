@@ -2,10 +2,12 @@ import { Item } from './shared/item';
 import { EventEmitter } from '@angular/core';
 import { element } from 'protractor';
 import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 
 export class ElementBoxService {
-  elementsChanged = new EventEmitter<Item[]>();
-
+  elementsChanged = new Subject<Item[]>();
+  startedEditing = new Subject<number>();
   private elements: Item[] = [  new Item('item1', 'item2'),
                                 new Item('item2', 'item3'),
                                 new Item('item3', 'item4'),
@@ -21,24 +23,20 @@ export class ElementBoxService {
 
   addNewItem(item: Item) {
     this.elements.push(item);
-    this.elementsChanged.emit(this.elements.slice());
+    this.elementsChanged.next(this.elements.slice());
   }
 
   getItem(index: number) {
     return this.elements[index];
   }
 
-  saveItem(item: Item) {
-    if (this.elements.indexOf(item) === -1) {
-      this.addNewItem(item);
-    }
-    this.elementsChanged.emit(this.elements.slice());
+  removeItem(index: number) {
+    this.elements.splice(index, 1);
+    this.elementsChanged.next(this.elements.slice());
   }
 
-  removeItem(item: Item) {
-    const index = this.elements.indexOf(item, 0);
-    if (index > -1) {
-      this.elements.splice(index, 1);
-    }
+  update(element: Item, index: number) {
+    this.elements[index] = element;
+    this.elementsChanged.next(this.elements.slice());
   }
 }

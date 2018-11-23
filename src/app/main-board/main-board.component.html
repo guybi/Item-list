@@ -1,32 +1,59 @@
 <div class="container">
-      <div class="row">
-          <div class="col-sm-8 form-group">
-            <label for="name">Name</label>
-            <input class="form-control" id="name" type="text" #nameInput (keyup)='nameInput.value'/>
+  <div class="row">
+    <div class="col-xs-12">
+      <form  (ngSubmit)="onSubmit(f)" #f="ngForm">
+
+          <div class="row">
+              <div class="col-xs-12">
+                <div class="form-grop">
+                  <label for="name">Name</label>
+                  <input type="text" id="name" ngModel name="name" class="form-control" required>
+                </div>
+              </div>
           </div>
-      </div>
-      <div class="row">
-          <div class="col-sm-8 form-group">
-            <label for="description">Description</label>
-            <input class="form-control" id="description" type="text" #disInput (keyup)='disInput.value'/>
+
+
+          <div class="row">
+              <div class="col-xs-12">
+                <div class="form-grop">
+                  <label for="desription">Desription</label>
+                  <input type="text" id="desription" ngModel name="desription" class="form-control" required>
+                </div>
+              </div>
           </div>
-      </div>
-      <div class="row">
-          <div class="col-sm-8 form-group">
-              <button class="btn btn-success" (click)="onClickNewItem()">New Item</button>
-              <button class="btn btn-primary" (click)="onSaveItem()" [disabled]="nameInput.value.trim() === '' || disInput.value.trim() === ''">Save</button>
-              <button class="btn btn-danger" (click)="onDeleteItem()">Delete</button>
+
+
+          <div class="row">
+              <div class="col-xs-12">
+                <button 
+                  type="submit" 
+                  class="btn btn-success"
+                  [disabled]= "!f.valid"
+                  >
+                  {{ editMode ? "Update" : "Add"}}
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-danger" 
+                  (click)="onClickDelete()" 
+                  *ngIf="editMode">
+                  Delete
+                </button>
+                <button type="button" class="btn btn-primary" (click)="onClickCancel()">Cancel</button>
+              </div>
           </div>
-      </div>
+      
+      </form>
       <hr>
-        <div class="container col-xs-12">
-          <app-element-box *ngFor="let element of getElements(); let i = index"
-            style="cursor: pointer"
-            [element]="element"
-            [index]="i"
-            (selectedItem)="onSelectedItem($event)"
-            >
-          </app-element-box>
-        </div>
- 
+      <div class="container col-xs-12">
+        <app-element-box
+         *ngFor="let element of elements; let i = index"
+          style="cursor: pointer"
+          [element]="element"
+          (click)="onSelectItem(i)"
+          >
+        </app-element-box>
+      </div>
+    </div>
+  </div>
 </div>

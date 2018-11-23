@@ -1,7 +1,11 @@
+import { element } from 'protractor';
 import { ElementBoxService } from './../element-box.service';
 import { Item } from './../shared/item';
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { ElementBoxComponent } from 'src/app/main-board/element-box/element-box.component';
+import { FormGroup, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
+
+import { Subscription } from 'rxjs/subscription';
 
 @Component({
   selector: 'app-main-board',
@@ -10,55 +14,64 @@ import { ElementBoxComponent } from 'src/app/main-board/element-box/element-box.
 })
 export class MainBoardComponent implements OnInit {
 
-  @ViewChild('nameInput') nameInput: ElementRef;
-  @ViewChild('disInput') disInput: ElementRef;
+  @ViewChild('f') slForm: NgForm;
 
-  selectedItem: Item = new Item('', '');
-
+  editMode = false;
+  subscriptionElementChange: Subscription;
+  subscriptionStartedEditing: Subscription;
+  elements: Item[];
+  editedItemIndex: number;
+  editItem: Item;
   constructor(private elementBoxService: ElementBoxService) { }
 
   ngOnInit() {
+    this.elements = this.elementBoxService.getItems();
+    this.subscriptionElementChange = this.elementBoxService.elementsChanged
+      .subscribe(
+          (elements: Item[]) => {
+            this.elements = elements;
+          }
+      );
+
+    this.subscriptionStartedEditing = this.elementBoxService.startedEditing
+      .subscribe(
+        (index: number) => {
+          this.editMode = true;
+          this.editedItemIndex = index;
+          this.editItem = this.elementBoxService.getItem(index);
+          this.slForm.setValue({
+            'name': this.editItem.name,
+            'desription': this.editItem.desription
+          })
+        }
+      );
+
   }
 
-  getElements() {
-    return this.elementBoxService.getItems();
+  onSelectItem(index: number) {
+    this.elementBoxService.startedEditing.next(index);
   }
 
-  onSaveItem() {
+  onClickDelete() {
+    this.elementBoxService.removeItem(this.editedItemIndex)
+    this.slForm.reset();
+    this.editMode = false;
+  }
 
-    const name = this.nameInput.nativeElement.value;
-    const dec = this.disInput.nativeElement.value;
+  onClickCancel() {
+    this.editMode = false;
+    this.slForm.reset();
+  }
 
-    if (name === '' || dec === '') {
-      return;
+  onSubmit(form : NgForm) {
+    const newElement = form.value;
+    if (this.editMode) {
+      this.elementBoxService.update(newElement, this.editedItemIndex);
+    } else {
+      this.elementBoxService.addNewItem(newElement);
     }
-
-    this.selectedItem.name = name;
-    this.selectedItem.desription = dec;
-    this.elementBoxService.saveItem(this.selectedItem);
-
-    this.cleanInputs();
+    this.editMode = false;
+    this.slForm.reset();
   }
 
-  cleanInputs() {
-    this.nameInput.nativeElement.value = '';
-    this.disInput.nativeElement.value = '';
-    this.selectedItem = new Item('', '');
-  }
-
-  onClickNewItem() {
-    this.cleanInputs();
-  }
-
-  onSelectedItem(element: Item) {
-    this.nameInput.nativeElement.value = element.name;
-    this.disInput.nativeElement.value = element.desription;
-    this.selectedItem = element;
-  }
-
-  onDeleteItem() {
-    this.elementBoxService.removeItem(this.selectedItem);
-    this.selectedItem = undefined;
-    this.cleanInputs();
-  }
 }

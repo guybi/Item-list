@@ -6,6 +6,8 @@ import { MainBoardComponent } from './main-board/main-board.component';
 import { ElementBoxComponent } from './main-board/element-box/element-box.component';
 import { ElementBoxService } from 'src/app/element-box.service';
 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -13,7 +15,9 @@ import { ElementBoxService } from 'src/app/element-box.service';
     ElementBoxComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [ElementBoxService],
   bootstrap: [AppComponent]
