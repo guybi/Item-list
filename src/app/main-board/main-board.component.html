@@ -1,49 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <form  (ngSubmit)="onSubmit(f)" #f="ngForm">
-
-          <div class="row">
-              <div class="col-xs-12">
-                <div class="form-grop">
-                  <label for="name">Name</label>
-                  <input type="text" id="name" ngModel name="name" class="form-control" required>
-                </div>
-              </div>
-          </div>
-
-
-          <div class="row">
-              <div class="col-xs-12">
-                <div class="form-grop">
-                  <label for="desription">Desription</label>
-                  <input type="text" id="desription" ngModel name="desription" class="form-control" required>
-                </div>
-              </div>
-          </div>
-
-
-          <div class="row">
-              <div class="col-xs-12">
-                <button 
-                  type="submit" 
-                  class="btn btn-success"
-                  [disabled]= "!f.valid"
-                  >
-                  {{ editMode ? "Update" : "Add"}}
-                </button>
-                <button 
-                  type="button" 
-                  class="btn btn-danger" 
-                  (click)="onClickDelete()" 
-                  *ngIf="editMode">
-                  Delete
-                </button>
-                <button type="button" class="btn btn-primary" (click)="onClickCancel()">Cancel</button>
-              </div>
-          </div>
-      
-      </form>
+      <app-edit-element></app-edit-element>
       <hr>
       <div class="container col-xs-12">
         <app-element-box

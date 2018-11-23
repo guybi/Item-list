@@ -14,14 +14,8 @@ import { Subscription } from 'rxjs/subscription';
 })
 export class MainBoardComponent implements OnInit {
 
-  @ViewChild('f') slForm: NgForm;
-
-  editMode = false;
   subscriptionElementChange: Subscription;
-  subscriptionStartedEditing: Subscription;
   elements: Item[];
-  editedItemIndex: number;
-  editItem: Item;
   constructor(private elementBoxService: ElementBoxService) { }
 
   ngOnInit() {
@@ -32,46 +26,10 @@ export class MainBoardComponent implements OnInit {
             this.elements = elements;
           }
       );
-
-    this.subscriptionStartedEditing = this.elementBoxService.startedEditing
-      .subscribe(
-        (index: number) => {
-          this.editMode = true;
-          this.editedItemIndex = index;
-          this.editItem = this.elementBoxService.getItem(index);
-          this.slForm.setValue({
-            'name': this.editItem.name,
-            'desription': this.editItem.desription
-          })
-        }
-      );
-
   }
 
   onSelectItem(index: number) {
     this.elementBoxService.startedEditing.next(index);
-  }
-
-  onClickDelete() {
-    this.elementBoxService.removeItem(this.editedItemIndex)
-    this.slForm.reset();
-    this.editMode = false;
-  }
-
-  onClickCancel() {
-    this.editMode = false;
-    this.slForm.reset();
-  }
-
-  onSubmit(form : NgForm) {
-    const newElement = form.value;
-    if (this.editMode) {
-      this.elementBoxService.update(newElement, this.editedItemIndex);
-    } else {
-      this.elementBoxService.addNewItem(newElement);
-    }
-    this.editMode = false;
-    this.slForm.reset();
   }
 
 }

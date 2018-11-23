@@ -7,12 +7,14 @@ import { ElementBoxComponent } from './main-board/element-box/element-box.compon
 import { ElementBoxService } from 'src/app/element-box.service';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EditElementComponent } from 'src/app/main-board/edit-element/edit-element.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainBoardComponent,
-    ElementBoxComponent
+    ElementBoxComponent,
+    EditElementComponent
   ],
   imports: [
     BrowserModule,
